@@ -4,9 +4,22 @@
 
     <div x-data="{ openDeleteModal: false, deleteActionUrl: '' }">
 
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-3xl font-medium text-gray-700">Daftar Kategori</h3>
-            <a href="{{ route('admin.categories.create') }}" class="bg-yellow-400 text-white px-4 py-2 rounded-md hover:bg-yellow-500">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+            <h3 class="text-3xl font-medium text-gray-700 order-1 sm:order-2 text-center">Daftar Kategori</h3>
+            
+            <form action="{{ route('admin.categories.index') }}" method="GET" class="relative w-full sm:w-64 order-2 sm:order-1">
+                @foreach(request()->except(['search', '_token']) as $key => $value)
+                    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                @endforeach
+                <div class="flex">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    </span>
+                    <input type="text" name="search" value="{{ request('search') }}" class="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500" placeholder="Cari Kategori...">
+                </div>
+            </form>
+
+            <a href="{{ route('admin.categories.create') }}" class="w-full sm:w-auto text-center bg-yellow-400 text-white px-4 py-2 rounded-md hover:bg-indigo-700 order-3 sm:order-3">
                 Tambah Kategori
             </a>
         </div>

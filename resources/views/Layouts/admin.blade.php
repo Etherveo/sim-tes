@@ -111,6 +111,52 @@
 
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
                 <div class="container mx-auto px-6 py-8">
+                @php
+                    $outOfStockProducts = \App\Models\Product::where('stok', 0)->get();
+                    $outOfStockCount = $outOfStockProducts->count();
+                @endphp
+
+                @if($outOfStockCount > 0)
+                    <div class="mb-6 px-4 sm:px-0">
+                        @if($outOfStockCount === 1)
+                            @php $p = $outOfStockProducts->first(); @endphp
+                            <a href="{{ route('admin.products.edit', $p->id) }}" class="flex items-center p-4 bg-red-50 border-l-4 border-red-600 rounded-r-lg shadow-md hover:bg-red-100 transition duration-150 group">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-6 w-6 text-red-600 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                    </svg>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-red-800">
+                                        <span class="font-bold uppercase">Peringatan Stok Habis:</span> 
+                                        Produk <span class="font-bold">"{{ $p->nama_produk }}"</span> di kategori <span class="italic">{{ $p->kategori_produk }}</span> telah habis. Klik untuk edit stok.
+                                    </p>
+                                </div>
+                                <div class="ml-auto">
+                                    <svg class="h-5 w-5 text-red-400 group-hover:text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </div>
+                            </a>
+                        @else
+                            <a href="{{ route('admin.dashboard', ['filter_stok_kosong' => 1]) }}" class="flex items-center p-4 bg-orange-50 border-l-4 border-orange-500 rounded-r-lg shadow-md hover:bg-orange-100 transition duration-150 group">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-6 w-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm text-orange-800">
+                                        <span class="font-bold">{{ $outOfStockCount }} Produk</span> telah kehabisan stok, segera lakukan pengisian ulang stok.
+                                    </p>
+                                </div>
+                                <div class="ml-auto text-orange-400 group-hover:text-orange-600 text-xs font-medium">
+                                    Lihat Semua &rarr;
+                                </div>
+                            </a>
+                        @endif
+                    </div>
+                @endif
                     @yield('content')
                 </div>
             </main>

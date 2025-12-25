@@ -2,9 +2,6 @@
 
 @section('content')
     
-    <!-- 
-      X-DATA: Mengelola Modal Hapus
-    -->
     <div x-data="{ showDeleteModal: false, deleteActionUrl: '' }">
 
         <div class="flex justify-between items-center mb-6">
@@ -26,7 +23,6 @@
         @endif
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Kartu Tema Default (Bawaan Sistem) -->
             <div class="bg-gray-100 rounded-lg shadow-inner border-2 border-dashed border-gray-300 p-4 flex flex-col justify-center items-center text-center opacity-75">
                 <h4 class="font-bold text-gray-600">Tema Bawaan (Default)</h4>
                 <p class="text-xs text-gray-500 mt-2 mb-4">Tampilan asli kodingan jika tidak ada tema aktif.</p>
@@ -37,15 +33,12 @@
                 @endif
             </div>
 
-            <!-- Looping Tema Database -->
             @forelse($themes as $theme)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden border-2 {{ $theme->is_active ? 'border-green-500 ring-2 ring-green-100' : 'border-transparent' }}">
                     
-                    <!-- Preview Gambar -->
                     <div class="h-40 bg-gray-200 relative group">
                         <img src="{{ asset('storage/' . $theme->login_image) }}" class="w-full h-full object-cover opacity-90 transition group-hover:opacity-100">
                         
-                        <!-- Overlay Logo -->
                         <div class="absolute bottom-2 left-2 bg-white p-1 rounded shadow">
                             <img src="{{ asset('storage/' . $theme->site_logo) }}" class="h-8 w-auto">
                         </div>
@@ -90,7 +83,7 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                             </a>
 
-                            <!-- 3. Tombol Hapus (MODIFIKASI: Memicu Modal) -->
+                            <!-- 3. Tombol Hapus -->
                             @if(!$theme->is_active)
                                 <button type="button" 
                                         @click="deleteActionUrl = '{{ route('admin.themes.destroy', $theme) }}'; showDeleteModal = true"
@@ -114,9 +107,6 @@
             @endforelse
         </div>
 
-        <!-- ========================================== -->
-        <!-- MODAL KONFIRMASI HAPUS (BARU) -->
-        <!-- ========================================== -->
         <div x-show="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto" x-cloak>
 
             <div x-show="showDeleteModal" 
@@ -124,13 +114,11 @@
                  x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" 
                  class="fixed inset-0 bg-black/50" @click="showDeleteModal = false"></div>
 
-            <!-- Konten Modal -->
             <div x-show="showDeleteModal"
                  x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-95 translate-y-4" x-transition:enter-end="opacity-100 scale-100 translate-y-0"
                  class="relative w-full max-w-md p-6 bg-white rounded-lg shadow-xl m-4 transform transition-all">
                 
                 <div class="text-center">
-                    <!-- Ikon Sampah -->
                     <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100 mb-4">
                         <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

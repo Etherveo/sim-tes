@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Katalog Instansi</title>
+        <title>Ira Stationery</title>
         <style>
             [x-cloak] { display: none !important; }
         </style>
@@ -20,8 +20,8 @@
                         <a href="{{ url('/') }}">
                             @if(isset($themeSettings['site_logo']) && $themeSettings['site_logo'])
                                 <img class="h-10 w-auto" src="{{ asset('storage/' . $themeSettings['site_logo']) }}" alt="Logo Instansi">
-                            @else
-                                <img class="h-16 w-auto" src="/images/logo-ira.png" alt="Logo Instansi">
+                                @else
+                                <img class="h-10 md:h-16 w-auto" src="/images/logo-ira.png" alt="Logo Instansi">
                             @endif
                         </a>
                     </div>

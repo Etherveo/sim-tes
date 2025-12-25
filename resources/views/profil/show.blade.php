@@ -48,12 +48,12 @@
                 
                 <div class="sm:col-span-1">
                     <dt class="text-sm font-medium text-gray-500">Nama Lengkap</dt>
-                    <dd class="mt-1 text-sm text-gray-900 font-semibold">{{ $user->nama_lengkap }}</dd>
+                    <dd class="mt-1 text-sm text-gray-900 bg-gray-100 py-2 rounded font-semibold">{{ $user->nama_lengkap }}</dd>
                 </div>
 
                 <div class="sm:col-span-1">
                     <dt class="text-sm font-medium text-gray-500">Username</dt>
-                    <dd class="mt-1 text-sm text-gray-900 font-mono bg-gray-100 px-2 py-1 rounded inline-block">
+                    <dd class="mt-1 text-sm text-gray-900 font-mono px-2 py-1 rounded inline-block">
                         {{ $user->username }}
                     </dd>
                 </div>
@@ -106,12 +106,12 @@
                     
                     <div>
                         <label for="nama_lengkap" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                        <input type="text" name="nama_lengkap" id="nama_lengkap" value="{{ old('nama_lengkap', $user->nama_lengkap) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border p-2">
+                        <input type="text" name="nama_lengkap" id="nama_lengkap" value="{{ old('nama_lengkap', $user->nama_lengkap) }}" disabled class="mt-1 block w-full bg-gray-100 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-gray-500 sm:text-sm border p-2 cursor-not-allowed">
                     </div>
 
                     <div>
                         <label for="username" class="block text-sm font-medium text-gray-500">Username</label>
-                        <input type="text" value="{{ $user->username }}" disabled class="mt-1 block w-full border-gray-200 bg-gray-100 text-gray-500 rounded-md shadow-sm sm:text-sm border p-2 cursor-not-allowed">
+                        <input type="text" value="{{ $user->username }}" class="mt-1 block w-full border-gray-200 text-black-500 rounded-md shadow-sm sm:text-sm border p-2">
                         <input type="hidden" name="username" value="{{ $user->username }}">
                     </div>
 

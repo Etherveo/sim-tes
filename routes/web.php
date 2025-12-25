@@ -28,6 +28,10 @@ Route::get('/cari', [KatalogController::class, 'search'])
 Route::get('/produk/{product}', function (App\Models\Product $product) {
     return view('produk.detail', compact('product'));
 })->name('produk.detail');
+Route::get('/produk-promo', [KatalogController::class, 'showAllPromo'])
+    ->name('produk.promo');
+Route::get('/produk-semua', [KatalogController::class, 'showAllProducts'])
+    ->name('produk.semua');
 
 Route::get('/login', [LoginController::class, 'create'])->name('login');
 Route::post('/login', [LoginController::class, 'store']);

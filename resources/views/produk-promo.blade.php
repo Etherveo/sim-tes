@@ -4,7 +4,7 @@
     <div class="container mx-auto max-w-7xl py-5 px-4 sm:px-6 lg:px-8">
 
     <h1 class="text-3xl font-bold text-gray-900 mb-8">
-        Hasil pencarian untuk: "{{ $query }}"
+        Semua Produk Berdiskon!
     </h1>
 
         <div x-data="{ 
@@ -24,7 +24,7 @@
             </button>
 
             <button @click="openFilter = !openFilter" @click.away="openFilter = false" 
-                class="flex items-center px-4 py-2 bg-white border {{ request()->hasAny(['filter_kategori', 'filter_diskon', 'filter_stok_kosong']) ? 'border-indigo-500 text-indigo-600 bg-indigo-50' : 'border-gray-300 text-gray-700' }} rounded-lg shadow-sm">
+                class="flex items-center px-4 py-2 bg-white border {{ request()->hasAny(['filter_kategori', 'filter_diskon']) ? 'border-indigo-500 text-indigo-600 bg-indigo-50' : 'border-gray-300 text-gray-700' }} rounded-lg shadow-sm">
                 Filter
             </button>
 
@@ -39,7 +39,7 @@
                         <span class="text-sm text-indigo-500">{{ request('filter_harga_min') ? '●' : '' }}</span>
                     </button>
                     <div class="border-t my-1"></div>
-                    <a href="{{ route('produk.cari', ['search' => $query]) }}" class="block px-4 py-2 text-sm text-red-500 hover:bg-red-50">Reset Filter</a>
+                    <a href="{{ route('produk.promo') }}" class="block px-4 py-2 text-sm text-red-500 hover:bg-red-50">Reset Filter</a>
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
                     <a href="{{ $sUrl('harga', 'desc') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50">Harga Termahal</a>
                 </div>
                 <div class="py-1">
-                    <a href="{{ $sUrl('kode', 'desc') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50">Produk Terbaru</a>
+                    <a href="{{ $sUrl('kode', 'desc') }}" class="block px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50">Produk Terbaru (Default)</a>
                 </div>
             </div>
 
@@ -74,8 +74,8 @@
                     <div @click.away="showModal = false" 
                         class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-[90%] md:w-[80%] lg:w-[70%] max-w-5xl">  
 
-                        <form action="{{ route('produk.cari') }}" method="GET">
-                            @foreach(request()->except(['filter_kategori', 'filter_diskon', 'filter_harga_min', 'filter_harga_max', 'filter_stok_kosong', 'filter_stok_min', 'filter_stok_max', '_token']) as $key => $value)
+                        <form action="{{ route('produk.promo') }}" method="GET">
+                            @foreach(request()->except(['filter_kategori', 'filter_diskon', 'filter_harga_min', 'filter_harga_max', '_token']) as $key => $value)
                                 <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                             @endforeach
 
@@ -107,14 +107,14 @@
                                 </div>
 
                                 <div x-show="modalType === 'harga'" class="space-y-6">
-                                    <label class="flex items-center p-4 border-2 border-dashed border-indigo-200 rounded-lg cursor-pointer bg-indigo-50 hover:bg-indigo-100 transition">
+                                    <!-- <label class="flex items-center p-4 border-2 border-dashed border-indigo-200 rounded-lg cursor-pointer bg-indigo-50 hover:bg-indigo-100 transition">
                                         <input type="checkbox" name="filter_diskon" value="1" 
                                             {{ request('filter_diskon') == '1' ? 'checked' : '' }} 
                                             class="h-5 w-5 rounded text-indigo-600 border-gray-300 focus:ring-indigo-500">
                                         <div class="ml-3">
                                             <span class="block font-semibold text-indigo-700">Tampilkan Produk Sedang Diskon Saja</span>
                                         </div>
-                                    </label>
+                                    </label> -->
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
                                             <label class="block text-sm font-bold text-gray-700 mb-2">Harga Minimum (Rp)</label>
@@ -140,15 +140,18 @@
         
         <div class="grid grid-cols-2 gap-4 md:gap-6 md:grid-cols-3 lg:grid-cols-4">
             
-            @forelse ($products as $product)
+            @forelse ($promoProducts as $product)
                 <x-product-card :product="$product" />
-            
             @empty
                 <p class="col-span-full text-center text-gray-500 text-lg">
-                    Maaf, tidak ada produk yang ditemukan untuk kata kunci "{{ $query }}".
+                    Maaf, tidak ada promo untuk saat ini.
                 </p>
             @endforelse
 
+        </div>
+
+        <div class="mt-12">
+            {{ $promoProducts->appends(request()->query())->links() }}
         </div>
     </div>
 @endsection

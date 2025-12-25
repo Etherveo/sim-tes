@@ -11,9 +11,16 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::latest()->get();
+        $query = Category::query();
+
+        if ($search = $request->input('search')) {
+            $query->where('nama_kategori', 'LIKE', "%{$search}%");
+        }
+
+        $categories = $query->latest()->get();
+        
         return view('admin.categories.index', compact('categories'));
     }
 

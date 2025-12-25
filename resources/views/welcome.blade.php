@@ -5,7 +5,11 @@
 
         @if ($promoProducts->isNotEmpty())
             <div class="mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">Sedang Promo</h2>
+
+                <div class="flex justify-between items-end mb-8">
+                    <h2 class="text-3xl font-bold text-gray-900">Sedang Promo</h2>
+                    <a href="{{ route('produk.promo') }}" class="text-indigo-600 font-semibold hover:underline">Lihat Semua &rarr;</a>
+                </div>
 
                 <div class="flex overflow-x-auto pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 space-x-4 hide-scrollbar">
                     @foreach ($promoProducts as $product)
@@ -49,13 +53,15 @@
             </div>
         @endif
 
-        <h2 class="text-3xl font-bold text-gray-900 mb-8">Katalog Produk</h2>
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+            <h2 class="text-3xl font-bold text-gray-900">Katalog Produk</h2>
+            <a href="{{ route('produk.semua') }}" class="text-indigo-600 font-semibold hover:underline">Lihat Semua &rarr;</a>
+        </div>
         
         <div class="grid grid-cols-2 gap-4 md:gap-6 md:grid-cols-3 lg:grid-cols-5">
             
             @forelse ($allProducts as $product)
                 <x-product-card :product="$product" />
-            
             @empty
                 <p class="col-span-full text-center text-gray-500">
                     Belum ada produk yang tersedia saat ini.

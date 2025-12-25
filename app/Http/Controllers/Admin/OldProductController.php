@@ -10,46 +10,16 @@ use App\Models\Category;
 
 class ProductController extends Controller
 {
+    
     public function index(Request $request)
     {
-        // Ambil kategori untuk list di modal
-        $categories = Category::orderBy('nama_kategori', 'asc')->get();
-        $query = Product::query();
-
-        // --- 1. SEARCHING ---
-        if ($search = $request->input('search')) {
-            $query->where(function($q) use ($search) {
-                $q->where('nama_produk', 'LIKE', "%{$search}%")
-                ->orWhere('kategori_produk', 'LIKE', "%{$search}%");
-                if (is_numeric($search)) $q->orWhere('id', $search);
-            });
-        }
-
-        // --- 2. FILTERING ---
-        if ($request->filled('filter_kategori')) {
-            $query->where('kategori_produk', $request->filter_kategori);
-        }
-        if ($request->filter_diskon == '1') {
-            $query->whereNotNull('harga_diskon')      // Pastikan kolom tidak null
-                  ->where('harga_diskon', '>', 0)     // Pastikan harganya bukan 0
-                  ->whereColumn('harga_diskon', '<', 'harga'); // Pastikan harga diskon < harga normal
-        }
-        if ($request->filled('filter_harga_min')) {
-            $query->where('harga', '>=', $request->filter_harga_min);
-        }
-        if ($request->filled('filter_harga_max')) {
-            $query->where('harga', '<=', $request->filter_harga_max);
-        }
-        if ($request->filter_stok_kosong == '1') {
-            $query->where('stok', 0);
-        } else {
-            if ($request->filled('filter_stok_min')) $query->where('stok', '>=', $request->filter_stok_min);
-            if ($request->filled('filter_stok_max')) $query->where('stok', '<=', $request->filter_stok_max);
-        }
-
-        // --- 3. SORTING ---
+        $searchQuery = $request->input('search');
+        
+        // Default sorting: Nama Produk A-Z (kalau tidak ada request)
         $sortBy = $request->input('sort_by', 'nama_produk');
         $sortDirection = $request->input('sort_direction', 'asc');
+
+        // Mapping input user ke nama kolom database yang valid
         $validSorts = [
             'stok' => 'stok',
             'nama' => 'nama_produk',
@@ -57,12 +27,36 @@ class ProductController extends Controller
             'harga' => 'harga',
             'kode' => 'id'
         ];
-        $column = array_key_exists($sortBy, $validSorts) ? $validSorts[$sortBy] : 'nama_produk';
-        $sortDirection = in_array($sortDirection, ['asc', 'desc']) ? $sortDirection : 'asc';
 
-        $products = $query->orderBy($column, $sortDirection)->paginate(10);
+        // Validasi kolom sorting (mencegah error jika user utak-atik URL)
+        if (!array_key_exists($sortBy, $validSorts)) {
+            $sortBy = 'nama_produk';
+        } else {
+            $sortBy = $validSorts[$sortBy];
+        }
 
-        return view('admin.products.index', compact('products', 'categories'));
+        // Validasi arah sorting
+        if (!in_array($sortDirection, ['asc', 'desc'])) {
+            $sortDirection = 'asc';
+        }
+
+        $query = Product::query();
+
+        // Logika Search (Tetap dipertahankan)
+        if ($searchQuery) {
+            $query->where(function($q) use ($searchQuery) {
+                $q->where('nama_produk', 'LIKE', "%{$searchQuery}%")
+                  ->orWhere('kategori_produk', 'LIKE', "%{$searchQuery}%");
+                if (is_numeric($searchQuery)) {
+                    $q->orWhere('id', $searchQuery);
+                }
+            });
+        }
+
+        // Terapkan Sorting
+        $products = $query->orderBy($sortBy, $sortDirection)->get();
+
+        return view('admin.products.index', compact('products'));
     }
 
     public function create()
